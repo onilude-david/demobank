@@ -5,47 +5,41 @@ import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { signup, loading: authLoading, error: authError, setError } = useAuth();
     const nameId = useId();
     const emailId = useId();
     const passwordId = useId();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [error, setLocalError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        setLocalError('');
 
         if (!name.trim() || name.trim().length < 2) {
-            setError('Please enter your full name (at least 2 characters).');
+            setLocalError('Please enter your full name (at least 2 characters).');
             return;
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            setError('Please enter a valid email address.');
+            setLocalError('Please enter a valid email address.');
             return;
         }
         if (password.length < 8) {
-            setError('Password must be at least 8 characters long.');
+            setLocalError('Password must be at least 8 characters long.');
             return;
         }
 
-        setLoading(true);
-        try {
-            await new Promise(res => setTimeout(res, 800));
-            login(email, name.trim());
+        const success = await signup(email, password, name.trim());
+        if (success) {
             navigate('/');
-        } catch {
-            setError('An error occurred. Please try again.');
-        } finally {
-            setLoading(false);
+        } else {
+            setLocalError(authError || 'An error occurred. Please try again.');
         }
     };
 
-    return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+    const displayError = error || authError   <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
             <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]" />
             <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px]" />
 
@@ -55,10 +49,13 @@ const SignUp = () => {
                     <p className="text-gray-400">Create your account to get started.</p>
                 </div>
 
-                {error && (
+                {displayError && (
                     <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm">
                         <AlertCircle size={16} className="shrink-0" />
-                        {error}
+                 displayError && (
+                    <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm">
+                        <AlertCircle size={16} className="shrink-0" />
+                        {displayError}
                     </div>
                 )}
 
@@ -76,7 +73,7 @@ const SignUp = () => {
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Alex Morgan"
                                 autoComplete="name"
-                                disabled={loading}
+                                disabled={authLoading}
                                 className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                             />
                         </div>
@@ -95,7 +92,7 @@ const SignUp = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="alex@example.com"
                                 autoComplete="email"
-                                disabled={loading}
+                                disabled={authLoading}
                                 className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                             />
                         </div>
@@ -114,7 +111,7 @@ const SignUp = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 autoComplete="new-password"
-                                disabled={loading}
+                                disabled={authLoading}
                                 className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                             />
                         </div>
@@ -126,13 +123,10 @@ const SignUp = () => {
                     <div className="pt-2">
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={authLoading}
                             className="w-full bg-primary hover:bg-blue-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
                         >
-                            {loading ? (
-                                <>
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Creating account...
+                            {authL      Creating account...
                                 </>
                             ) : (
                                 <>
