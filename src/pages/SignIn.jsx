@@ -1,19 +1,45 @@
-import React from 'react';
+import { AlertCircle, ArrowRight, Lock, Mail } from 'lucide-react';
+import { useId, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const SignIn = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
+    const emailId = useId();
+    const passwordId = useId();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate login
-        navigate('/');
+        setError('');
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError('Please enter a valid email address.');
+            return;
+        }
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await new Promise(res => setTimeout(res, 800));
+            login(email, 'Alex Smith');
+            navigate('/');
+        } catch {
+            setError('An error occurred. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Background Elements */}
             <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]" />
             <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[100px]" />
 
@@ -23,48 +49,78 @@ const SignIn = () => {
                     <p className="text-gray-400">Welcome back! Please sign in to continue.</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                {error && (
+                    <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm">
+                        <AlertCircle size={16} className="shrink-0" />
+                        {error}
+                    </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
+                        <label htmlFor={emailId} className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
                         <div className="relative">
                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
                                 <Mail size={20} />
                             </div>
                             <input
+                                id={emailId}
                                 type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="alex@example.com"
-                                className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors"
-                                required
+                                autoComplete="email"
+                                disabled={loading}
+                                className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300 ml-1">Password</label>
+                        <label htmlFor={passwordId} className="text-sm font-medium text-gray-300 ml-1">Password</label>
                         <div className="relative">
                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
                                 <Lock size={20} />
                             </div>
                             <input
+                                id={passwordId}
                                 type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors"
-                                required
+                                autoComplete="current-password"
+                                disabled={loading}
+                                className="w-full bg-background/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                             />
                         </div>
                     </div>
 
                     <div className="flex items-center justify-between text-sm">
                         <label className="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" className="w-4 h-4 rounded border-gray-600 bg-transparent text-primary focus:ring-offset-background focus:ring-primary" />
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-600 bg-transparent text-primary" />
                             <span className="text-gray-400 group-hover:text-white transition-colors">Remember me</span>
                         </label>
-                        <a href="#" className="text-primary hover:text-blue-400 transition-colors">Forgot Password?</a>
+                        <button type="button" className="text-primary hover:text-blue-400 transition-colors">
+                            Forgot Password?
+                        </button>
                     </div>
 
-                    <button type="submit" className="w-full bg-primary hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group">
-                        Sign In
-                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-primary hover:bg-blue-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+                    >
+                        {loading ? (
+                            <>
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                Signing in...
+                            </>
+                        ) : (
+                            <>
+                                Sign In
+                                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </>
+                        )}
                     </button>
                 </form>
 

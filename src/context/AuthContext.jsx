@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -12,8 +12,14 @@ export const AuthProvider = ({ children }) => {
         }
     });
 
-    const login = (email) => {
-        const userData = { email, name: 'Alex Smith', initials: 'AS' };
+    const login = (email, name = 'User') => {
+        const initials = name
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+        const userData = { email, name, initials };
         setUser(userData);
         localStorage.setItem('vault_user', JSON.stringify(userData));
     };
