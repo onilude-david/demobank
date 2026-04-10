@@ -1,18 +1,18 @@
-import { AlertCircle, ArrowRight, Lock, Mail, User } from 'lucide-react';
+import { AlertCircle, ArrowRight, Lock, Mail, User, Loader2 } from 'lucide-react';
 import { useId, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
     const navigate = useNavigate();
-    const { signup, loading: authLoading, error: authError, setError } = useAuth();
+    const { signup, loading: authLoading, error: authError } = useAuth();
     const nameId = useId();
     const emailId = useId();
     const passwordId = useId();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setLocalError] = useState('');
+    const [localError, setLocalError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,12 +34,14 @@ const SignUp = () => {
         const success = await signup(email, password, name.trim());
         if (success) {
             navigate('/');
-        } else {
-            setLocalError(authError || 'An error occurred. Please try again.');
         }
+        // On API failure: authError is set in context → triggers re-render → displayError shows it
     };
 
-    const displayError = error || authError   <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+    const displayError = localError || authError;
+
+    return (
+        <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
             <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]" />
             <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px]" />
 
@@ -50,9 +52,6 @@ const SignUp = () => {
                 </div>
 
                 {displayError && (
-                    <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm">
-                        <AlertCircle size={16} className="shrink-0" />
-                 displayError && (
                     <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm">
                         <AlertCircle size={16} className="shrink-0" />
                         {displayError}
@@ -126,7 +125,10 @@ const SignUp = () => {
                             disabled={authLoading}
                             className="w-full bg-primary hover:bg-blue-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
                         >
-                            {authL      Creating account...
+                            {authLoading ? (
+                                <>
+                                    <Loader2 size={20} className="animate-spin" />
+                                    Creating account...
                                 </>
                             ) : (
                                 <>
