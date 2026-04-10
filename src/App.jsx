@@ -21,7 +21,8 @@ import Transfer from './pages/Transfer';
 
 // Redirects already-authenticated users away from login/register pages
 const PublicRoute = ({ children }) => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, loading } = useAuth();
+    if (loading) return null;
     return isAuthenticated ? <Navigate to="/" replace /> : children;
 };
 

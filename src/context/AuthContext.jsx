@@ -1,40 +1,45 @@
-import { createContext, useContext, useState } from 'react';
-import { authAPI } from '../lib/api';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        try {
-            const saved = localStorage.getItem('vault_user');
-            return saved ? JSON.parse(saved) : null;
-        } catch {
-            return null;
-        }
-    });
+const formatUser = (supabaseUser) => {
+    const name = supabaseUser.user_metadata?.name || supabaseUser.email.split('@')[0];
+    const initials = name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    return { id: supabaseUser.id, email: supabaseUser.email, name, initials };
+};
 
-    const [loading, setLoading] = useState(false);
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    useEffect(() => {
+        // Restore session on mount
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ? formatUser(session.user) : null);
+            setLoading(false);
+        });
+
+        // Keep in sync with Supabase auth state
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ? formatUser(session.user) : null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
     const login = async (email, password) => {
-        setLoading(true);
         setError(null);
+        setLoading(true);
         try {
-            const response = await authAPI.login(email, password);
-            const { token, user: userData } = response;
-            
-            const initials = userData.name
-                .split(' ')
-                .map(n => n[0])
-                .join('')
-                .toUpperCase()
-                .slice(0, 2);
-            
-            const userWithInitials = { ...userData, initials };
-            setUser(userWithInitials);
-            localStorage.setItem('vault_user', JSON.stringify(userWithInitials));
-            localStorage.setItem('vault_token', token);
-            
+            const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+            if (err) throw err;
             return true;
         } catch (err) {
             setError(err.message);
@@ -45,24 +50,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     const signup = async (email, password, name) => {
-        setLoading(true);
         setError(null);
+        setLoading(true);
         try {
-            const response = await authAPI.signup(email, password, name);
-            const { token, user: userData } = response;
-            
-            const initials = userData.name
-                .split(' ')
-                .map(n => n[0])
-                .join('')
-                .toUpperCase()
-                .slice(0, 2);
-            
-            const userWithInitials = { ...userData, initials };
-            setUser(userWithInitials);
-            localStorage.setItem('vault_user', JSON.stringify(userWithInitials));
-            localStorage.setItem('vault_token', token);
-            
+            const { error: err } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { name } },
+            });
+            if (err) throw err;
             return true;
         } catch (err) {
             setError(err.message);
@@ -72,23 +68,21 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
+        await supabase.auth.signOut();
         setUser(null);
         setError(null);
-        localStorage.removeItem('vault_user');
-        localStorage.removeItem('vault_token');
     };
 
     return (
-        <AuthContext.Provider value={{ 
-            user, 
-            login, 
+        <AuthContext.Provider value={{
+            user,
+            login,
             signup,
-            logout, 
+            logout,
             isAuthenticated: !!user,
             loading,
             error,
-            setError
         }}>
             {children}
         </AuthContext.Provider>
@@ -96,7 +90,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) throw new Error('useAuth must be used within AuthProvider');
-    return context;
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+    return ctx;
 };
