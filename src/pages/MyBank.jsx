@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CreditCard, Building2, Plus, Lock, MoreVertical, Check, ShieldCheck, ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const MyBank = () => {
-    const navigate = useNavigate();
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('cards');
     const [showAddBank, setShowAddBank] = useState(false);
     const [selectedBank, setSelectedBank] = useState(null);
@@ -93,7 +93,7 @@ const MyBank = () => {
                                 <div className="flex justify-between items-end">
                                     <div>
                                         <p className="text-white/60 text-xs mb-1">CARDHOLDER</p>
-                                        <p className="text-white font-medium">ALEX SMITH</p>
+                                        <p className="text-white font-medium">{user?.name?.toUpperCase() ?? 'VAULT USER'}</p>
                                     </div>
                                     <div>
                                         <p className="text-white/60 text-xs mb-1">EXPIRES</p>
