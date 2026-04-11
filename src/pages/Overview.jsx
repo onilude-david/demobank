@@ -1,152 +1,194 @@
-import React from 'react';
-import { TrendingUp, ArrowUpRight, ArrowDownRight, Wallet, Activity, CreditCard, DollarSign, Zap, ChevronRight } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Coffee, ShoppingBag, Smartphone, Car, Home, CreditCard, TrendingUp, DollarSign, Zap, ChevronRight, Plus, ArrowRightLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
+
+const CATEGORY_ICONS = {
+    Food: Coffee,
+    Tech: Smartphone,
+    Salary: ArrowDownLeft,
+    Transport: Car,
+    Groceries: ShoppingBag,
+    Utilities: Home,
+    Bills: Home,
+    Transfer: ArrowRightLeft,
+    Deposit: ArrowDownLeft,
+    Entertainment: CreditCard,
+};
+
+const getCategoryIcon = (category) => CATEGORY_ICONS[category] ?? CreditCard;
+
+const StatCard = ({ label, value, sub, accent, children }) => (
+    <div className={`bg-surface rounded-2xl border border-white/5 p-6 hover:border-${accent}/30 transition-colors relative overflow-hidden group`}>
+        {children}
+        <p className="text-gray-400 text-sm font-medium mb-3">{label}</p>
+        <p className="text-3xl font-bold text-white">{value}</p>
+        {sub && <p className="text-gray-500 text-sm mt-1">{sub}</p>}
+    </div>
+);
 
 const Overview = () => {
+    const { user } = useAuth();
+    const { balance, transactions, loadingData } = useApp();
+
+    const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + parseFloat(t.amount), 0);
+    const expenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(parseFloat(t.amount)), 0);
+    const recent = transactions.slice(0, 5);
+
+    const fmt = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold text-white">Overview</h2>
-                    <p className="text-gray-400 mt-1">Welcome back, Alex. Your financial command center.</p>
+                    <p className="text-gray-400 text-sm font-medium mb-1">Good day,</p>
+                    <h2 className="text-3xl font-bold text-white">{user?.name ?? 'Welcome back'}</h2>
                 </div>
-                <Link to="/add-money" className="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] active:scale-95">
-                    + Add Money
-                </Link>
-            </div>
-
-            {/* Main Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Net Worth Card (Combined) */}
-                <div className="bg-surface p-6 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-primary/50 transition-colors md:col-span-2">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Wallet size={120} />
-                    </div>
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="p-2 bg-primary/20 rounded-lg text-primary">
-                            <Wallet size={20} />
-                        </div>
-                        <span className="text-gray-400 font-medium">Total Net Worth</span>
-                    </div>
-                    <div className="flex items-end gap-4 mb-2">
-                        <h3 className="text-5xl font-bold text-white">$98,071.56</h3>
-                        <div className="flex items-center text-secondary text-sm font-medium bg-secondary/10 px-2 py-1 rounded-lg mb-2">
-                            <TrendingUp size={14} className="mr-1" />
-                            +8.2%
-                        </div>
-                    </div>
-                    <p className="text-gray-500">Cash + Investments</p>
-                </div>
-
-                {/* Monthly Spending */}
-                <div className="bg-surface p-6 rounded-2xl border border-white/5 hover:border-accent/50 transition-colors">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-accent/20 rounded-lg text-accent">
-                            <ArrowDownRight size={20} />
-                        </div>
-                        <span className="text-gray-400 font-medium">Monthly Spending</span>
-                    </div>
-                    <h3 className="text-3xl font-bold text-white mb-2">$3,402.20</h3>
-                    <p className="text-gray-500 text-sm">Last 30 days</p>
+                <div className="flex gap-2">
+                    <Link to="/transfer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-sm font-medium transition-all border border-white/5">
+                        <ArrowRightLeft size={16} /> Transfer
+                    </Link>
+                    <Link to="/add-money"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-blue-600 text-white text-sm font-medium transition-all shadow-lg shadow-primary/20">
+                        <Plus size={16} /> Add Money
+                    </Link>
                 </div>
             </div>
 
-            {/* Secondary Grid: Investments, Loans, Bills */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Investments Widget */}
-                <Link to="/investments" className="bg-surface p-6 rounded-2xl border border-white/5 hover:border-secondary/50 transition-all group">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-secondary/20 rounded-lg text-secondary">
-                                <TrendingUp size={20} />
-                            </div>
-                            <span className="text-gray-400 font-medium">Investments</span>
+            {/* Balance Hero */}
+            <div className="bg-gradient-to-br from-primary/20 via-surface to-surface rounded-2xl border border-primary/10 p-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+                <div className="relative z-10">
+                    <p className="text-gray-400 text-sm font-medium mb-2">Total Balance</p>
+                    {loadingData ? (
+                        <div className="h-14 w-48 bg-white/5 animate-pulse rounded-xl" />
+                    ) : (
+                        <h3 className="text-5xl font-black text-white tracking-tight">{fmt(balance)}</h3>
+                    )}
+                    <p className="text-gray-500 text-sm mt-2">Vault Checking Account</p>
+                </div>
+            </div>
+
+            {/* Stats Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-surface rounded-2xl border border-white/5 p-5 hover:border-emerald-500/20 transition-colors">
+                    <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                            <ArrowDownLeft size={16} className="text-emerald-400" />
                         </div>
-                        <ChevronRight size={20} className="text-gray-600 group-hover:text-white transition-colors" />
+                        <span className="text-gray-400 text-sm font-medium">Total Income</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-1">$73,509.56</h3>
-                    <div className="h-10 flex items-end gap-1 mt-4">
-                        {[40, 60, 45, 70, 65, 80, 75].map((h, i) => (
-                            <div key={i} style={{ height: `${h}%` }} className="flex-1 bg-secondary/30 rounded-sm hover:bg-secondary transition-colors" />
-                        ))}
+                    {loadingData
+                        ? <div className="h-8 w-32 bg-white/5 animate-pulse rounded-lg" />
+                        : <p className="text-2xl font-bold text-emerald-400">{fmt(income)}</p>
+                    }
+                </div>
+                <div className="bg-surface rounded-2xl border border-white/5 p-5 hover:border-red-500/20 transition-colors">
+                    <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+                            <ArrowUpRight size={16} className="text-red-400" />
+                        </div>
+                        <span className="text-gray-400 text-sm font-medium">Total Expenses</span>
                     </div>
+                    {loadingData
+                        ? <div className="h-8 w-32 bg-white/5 animate-pulse rounded-lg" />
+                        : <p className="text-2xl font-bold text-red-400">{fmt(expenses)}</p>
+                    }
+                </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Link to="/investments" className="bg-surface rounded-2xl border border-white/5 hover:border-emerald-500/30 p-5 transition-all group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                            <TrendingUp size={18} className="text-emerald-400" />
+                        </div>
+                        <ChevronRight size={18} className="text-gray-600 group-hover:text-white transition-colors" />
+                    </div>
+                    <p className="text-gray-400 text-sm">Investments</p>
+                    <p className="text-xl font-bold text-white mt-1">$73,509</p>
+                    <p className="text-emerald-400 text-xs font-medium mt-1">+2.4% today</p>
                 </Link>
 
-                {/* Loans Widget */}
-                <Link to="/loans" className="bg-surface p-6 rounded-2xl border border-white/5 hover:border-purple-500/50 transition-all group">
+                <Link to="/loans" className="bg-surface rounded-2xl border border-white/5 hover:border-purple-500/30 p-5 transition-all group">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
-                                <DollarSign size={20} />
-                            </div>
-                            <span className="text-gray-400 font-medium">Active Loan</span>
+                        <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                            <DollarSign size={18} className="text-purple-400" />
                         </div>
-                        <ChevronRight size={20} className="text-gray-600 group-hover:text-white transition-colors" />
+                        <ChevronRight size={18} className="text-gray-600 group-hover:text-white transition-colors" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Personal Loan</h3>
-                    <div className="flex justify-between text-xs text-gray-400 mb-1">
-                        <span>Paid: $10,186</span>
-                        <span>Total: $22,636</span>
-                    </div>
-                    <div className="h-2 bg-background rounded-full overflow-hidden">
+                    <p className="text-gray-400 text-sm">Active Loan</p>
+                    <p className="text-xl font-bold text-white mt-1">$12,450</p>
+                    <div className="mt-2 h-1.5 bg-background rounded-full overflow-hidden">
                         <div className="h-full bg-purple-500 w-[45%] rounded-full" />
                     </div>
-                    <p className="text-xs text-gray-500 mt-3">Next payment: Oct 15</p>
                 </Link>
 
-                {/* Bills Widget */}
-                <Link to="/bills" className="bg-surface p-6 rounded-2xl border border-white/5 hover:border-yellow-500/50 transition-all group">
+                <Link to="/bills" className="bg-surface rounded-2xl border border-white/5 hover:border-yellow-500/30 p-5 transition-all group">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-yellow-500/20 rounded-lg text-yellow-400">
-                                <Zap size={20} />
-                            </div>
-                            <span className="text-gray-400 font-medium">Upcoming Bill</span>
+                        <div className="w-9 h-9 rounded-xl bg-yellow-500/10 flex items-center justify-center">
+                            <Zap size={18} className="text-yellow-400" />
                         </div>
-                        <ChevronRight size={20} className="text-gray-600 group-hover:text-white transition-colors" />
+                        <ChevronRight size={18} className="text-gray-600 group-hover:text-white transition-colors" />
                     </div>
-                    <div className="flex items-center gap-3 mt-2">
-                        <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-400">
-                            <Zap size={20} />
-                        </div>
-                        <div>
-                            <p className="font-bold text-white">Electric Co.</p>
-                            <p className="text-xs text-gray-500">Due Oct 15</p>
-                        </div>
-                    </div>
-                    <button className="w-full mt-4 bg-white/5 hover:bg-white/10 text-white py-2 rounded-lg text-sm font-medium transition-colors">
-                        Pay $124.50
-                    </button>
+                    <p className="text-gray-400 text-sm">Upcoming Bill</p>
+                    <p className="text-xl font-bold text-white mt-1">$124.50</p>
+                    <p className="text-yellow-400 text-xs font-medium mt-1">Due Oct 15</p>
                 </Link>
             </div>
 
-            {/* Recent Activity Section */}
-            <div className="bg-surface rounded-2xl border border-white/5 p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold flex items-center gap-2">
-                        <Activity size={20} className="text-primary" />
-                        Recent Activity
-                    </h3>
-                    <Link to="/transactions" className="text-sm text-primary hover:text-blue-400 transition-colors">View All</Link>
+            {/* Recent Transactions */}
+            <div className="bg-surface rounded-2xl border border-white/5 overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+                    <h3 className="text-base font-bold text-white">Recent Activity</h3>
+                    <Link to="/transactions" className="text-sm text-primary hover:text-blue-400 transition-colors font-medium">
+                        View All
+                    </Link>
                 </div>
 
-                <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-background/50 hover:bg-background transition-colors group cursor-pointer border border-transparent hover:border-white/5">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-white transition-colors">
-                                    <CreditCard size={18} />
+                {loadingData ? (
+                    <div className="divide-y divide-white/5">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="flex items-center gap-4 p-4 animate-pulse">
+                                <div className="w-10 h-10 rounded-full bg-white/5 shrink-0" />
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-4 w-32 bg-white/5 rounded" />
+                                    <div className="h-3 w-24 bg-white/5 rounded" />
                                 </div>
-                                <div>
-                                    <p className="font-medium text-white">Netflix Subscription</p>
-                                    <p className="text-sm text-gray-500">Entertainment • Today, 10:23 AM</p>
-                                </div>
+                                <div className="h-4 w-16 bg-white/5 rounded" />
                             </div>
-                            <span className="font-bold text-white">-$14.99</span>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                ) : recent.length === 0 ? (
+                    <div className="py-16 text-center text-gray-500">No transactions yet</div>
+                ) : (
+                    <div className="divide-y divide-white/5">
+                        {recent.map((t) => {
+                            const Icon = getCategoryIcon(t.category);
+                            const isIncome = t.type === 'income';
+                            const amt = parseFloat(t.amount);
+                            return (
+                                <div key={t.id} className="flex items-center justify-between px-6 py-4 hover:bg-white/3 transition-colors">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isIncome ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-gray-400'}`}>
+                                            <Icon size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-white">{t.merchant}</p>
+                                            <p className="text-xs text-gray-500">{t.category} · {t.date}</p>
+                                        </div>
+                                    </div>
+                                    <span className={`text-sm font-bold ${isIncome ? 'text-emerald-400' : 'text-white'}`}>
+                                        {isIncome ? '+' : ''}{fmt(Math.abs(amt))}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </div>
     );

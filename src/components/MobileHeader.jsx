@@ -1,81 +1,85 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Menu, X, LayoutDashboard, Wallet, ArrowRightLeft, DollarSign, TrendingUp, Zap, Settings, LogOut } from 'lucide-react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const navItems = [
+    { icon: LayoutDashboard, label: 'Overview', path: '/' },
+    { icon: Wallet, label: 'My Bank', path: '/my-bank' },
+    { icon: ArrowRightLeft, label: 'Transactions', path: '/transactions' },
+    { icon: DollarSign, label: 'Loans', path: '/loans' },
+    { icon: TrendingUp, label: 'Investments', path: '/investments' },
+    { icon: Zap, label: 'Bill Pay', path: '/bills' },
+    { icon: Settings, label: 'Settings', path: '/settings' },
+];
 
 const MobileHeader = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    const navItems = [
-        { icon: LayoutDashboard, label: 'Overview', path: '/' },
-        { icon: Wallet, label: 'My Bank', path: '/cards' },
-        { icon: ArrowRightLeft, label: 'Transactions', path: '/transactions' },
-        { icon: DollarSign, label: 'Loans', path: '/loans' },
-        { icon: TrendingUp, label: 'Investments', path: '/investments' },
-        { icon: Zap, label: 'Bill Pay', path: '/bills' },
-        { icon: Settings, label: 'Settings', path: '/settings' },
-    ];
+    const { user, logout } = useAuth();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
-            <header className="md:hidden fixed top-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-b border-white/10 z-50 px-6 py-4">
+            <header className="md:hidden fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-b border-white/5 z-50 px-5 py-4">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-primary tracking-tighter">VAULT</h1>
-                    <button
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-                    >
-                        {isMenuOpen ? (
-                            <X size={24} className="text-white" />
-                        ) : (
-                            <Menu size={24} className="text-white" />
-                        )}
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+                            <span className="text-white font-black text-xs">V</span>
+                        </div>
+                        <h1 className="text-lg font-black text-white tracking-tight">VAULT</h1>
+                    </div>
+                    <button onClick={() => setOpen(!open)} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
+                        {open ? <X size={22} className="text-white" /> : <Menu size={22} className="text-white" />}
                     </button>
                 </div>
             </header>
 
-            {/* Mobile Menu Overlay */}
-            {isMenuOpen && (
-                <div
-                    className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-                    onClick={() => setIsMenuOpen(false)}
-                />
+            {/* Backdrop */}
+            {open && (
+                <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setOpen(false)} />
             )}
 
-            {/* Mobile Menu Drawer */}
-            <div className={`md:hidden fixed top-0 right-0 h-full w-64 bg-surface border-l border-white/10 z-50 transform transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-                }`}>
-                <div className="p-6 border-b border-white/10">
-                    <h2 className="text-xl font-bold text-primary">Menu</h2>
+            {/* Drawer */}
+            <div className={`md:hidden fixed top-0 right-0 h-full w-72 bg-surface border-l border-white/5 z-50 transform transition-transform duration-300 flex flex-col ${open ? 'translate-x-0' : 'translate-x-full'}`}>
+                {/* Header */}
+                <div className="p-5 border-b border-white/5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+                            {user?.initials ?? '??'}
+                        </div>
+                        <div>
+                            <p className="text-sm font-semibold text-white">{user?.name ?? 'User'}</p>
+                            <p className="text-xs text-gray-500">{user?.email ?? ''}</p>
+                        </div>
+                    </div>
                 </div>
 
-                <nav className="p-4 space-y-2">
-                    {navItems.map((item, index) => (
+                {/* Nav */}
+                <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+                    {navItems.map((item) => (
                         <NavLink
-                            key={index}
+                            key={item.path}
                             to={item.path}
-                            onClick={() => setIsMenuOpen(false)}
+                            end={item.path === '/'}
+                            onClick={() => setOpen(false)}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
-                                    ? 'bg-primary/10 text-primary'
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                                }`
+                                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${isActive ? 'bg-primary/10 text-primary' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`
                             }
                         >
-                            <item.icon size={20} />
-                            <span className="font-medium">{item.label}</span>
+                            <item.icon size={18} />
+                            {item.label}
                         </NavLink>
                     ))}
                 </nav>
 
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-                    <Link
-                        to="/signin"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-colors rounded-xl hover:bg-white/5"
+                {/* Logout */}
+                <div className="p-3 border-t border-white/5">
+                    <button
+                        onClick={() => { setOpen(false); logout(); }}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-gray-400 hover:text-red-400 hover:bg-red-500/5 rounded-xl transition-all text-sm font-medium"
                     >
-                        <LogOut size={20} />
-                        <span className="font-medium">Logout</span>
-                    </Link>
+                        <LogOut size={18} />
+                        Sign Out
+                    </button>
                 </div>
             </div>
         </>
