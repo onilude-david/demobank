@@ -61,13 +61,13 @@ const Transactions = () => {
                         className="w-full bg-surface border border-white/5 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
                     />
                 </div>
-                <div className="flex bg-surface p-1 rounded-xl border border-white/5 shrink-0">
+                <div className="flex bg-surface p-1 rounded-xl border border-white/5 shrink-0 w-full sm:w-auto overflow-x-auto scrollbar-hide">
                     {FILTERS.map(f => (
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
                             className={cn(
-                                'px-5 py-2 rounded-lg text-sm font-medium transition-all',
+                                'flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap',
                                 filter === f ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-400 hover:text-white'
                             )}
                         >
@@ -104,24 +104,24 @@ const Transactions = () => {
                             const Icon = getCategoryIcon(t.category);
                             const isIncome = t.type === 'income';
                             return (
-                                <div key={t.id} className="flex items-center justify-between px-5 py-4 hover:bg-white/3 transition-colors group cursor-default">
-                                    <div className="flex items-center gap-4">
+                                <div key={t.id} className="flex items-center justify-between px-4 sm:px-6 py-4 hover:bg-white/3 transition-colors group cursor-default">
+                                    <div className="flex items-center gap-3 sm:gap-4 overflow-hidden">
                                         <div className={cn(
-                                            'w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-colors',
+                                            'w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center shrink-0 transition-colors',
                                             isIncome ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-gray-400 group-hover:bg-primary/10 group-hover:text-primary'
                                         )}>
-                                            <Icon size={19} />
+                                            <Icon size={18} />
                                         </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-white">{t.merchant}</p>
-                                            <p className="text-xs text-gray-500">{t.category} · {t.date}</p>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-semibold text-white truncate">{t.merchant}</p>
+                                            <p className="text-xs text-gray-500 truncate">{t.category} · {t.date}</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
+                                    <div className="text-right shrink-0 ml-4">
                                         <p className={cn('text-sm font-bold', isIncome ? 'text-emerald-400' : 'text-white')}>
                                             {isIncome ? '+' : '-'}{fmt(t.amount)}
                                         </p>
-                                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-gray-500">
+                                        <span className="text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-white/5 text-gray-500">
                                             Completed
                                         </span>
                                     </div>

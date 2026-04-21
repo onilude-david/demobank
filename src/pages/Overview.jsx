@@ -45,13 +45,13 @@ const Overview = () => {
                     <p className="text-gray-400 text-sm font-medium mb-1">Good day,</p>
                     <h2 className="text-3xl font-bold text-white">{user?.name ?? 'Welcome back'}</h2>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <Link to="/transfer"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-sm font-medium transition-all border border-white/5">
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-sm font-medium transition-all border border-white/5 w-full sm:w-auto">
                         <ArrowRightLeft size={16} /> Transfer
                     </Link>
                     <Link to="/add-money"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-blue-600 text-white text-sm font-medium transition-all shadow-lg shadow-primary/20">
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-blue-600 text-white text-sm font-medium transition-all shadow-lg shadow-primary/20 w-full sm:w-auto">
                         <Plus size={16} /> Add Money
                     </Link>
                 </div>
@@ -100,7 +100,7 @@ const Overview = () => {
             </div>
 
             {/* Quick Links */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Link to="/investments" className="bg-surface rounded-2xl border border-white/5 hover:border-emerald-500/30 p-5 transition-all group">
                     <div className="flex justify-between items-start mb-4">
                         <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">

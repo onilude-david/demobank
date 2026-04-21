@@ -39,7 +39,7 @@ const CardVisual = ({ card, index, showFull = false }) => {
         : `•••• •••• •••• ${digits.slice(-4)}`;
 
     return (
-        <div className={`bg-gradient-to-br ${gradient} rounded-2xl p-8 shadow-2xl shadow-primary/20 max-w-md mx-auto aspect-[1.586/1] flex flex-col justify-between relative overflow-hidden`}>
+        <div className={`bg-gradient-to-br ${gradient} rounded-2xl p-6 sm:p-8 shadow-2xl shadow-primary/20 w-full max-w-md mx-auto aspect-[1.586/1] flex flex-col justify-between relative overflow-hidden transition-all duration-300`}>
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
 
@@ -203,26 +203,26 @@ const MyBank = () => {
                             )}
 
                             {/* Card actions */}
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <button onClick={() => setShowFull(v => !v)}
-                                    className="bg-surface hover:bg-surface-hover p-6 rounded-2xl border border-white/5 transition-all group flex flex-col items-start">
-                                    <div className="p-3 rounded-full bg-background group-hover:bg-primary/20 transition-colors mb-3">
+                                    className="bg-surface hover:bg-surface-hover p-4 sm:p-6 rounded-2xl border border-white/5 transition-all group flex flex-col items-start w-full">
+                                    <div className="p-2 sm:p-3 rounded-full bg-background group-hover:bg-primary/20 transition-colors mb-2 sm:mb-3">
                                         {showFull ? <EyeOff size={24} className="text-blue-400" /> : <Eye size={24} className="text-blue-400" />}
                                     </div>
                                     <p className="text-sm font-medium text-white">{showFull ? 'Hide Details' : 'Show Details'}</p>
                                 </button>
 
                                 <button onClick={() => setShowAddCard(true)}
-                                    className="bg-surface hover:bg-surface-hover p-6 rounded-2xl border border-white/5 transition-all group flex flex-col items-start">
-                                    <div className="p-3 rounded-full bg-background group-hover:bg-primary/20 transition-colors mb-3">
+                                    className="bg-surface hover:bg-surface-hover p-4 sm:p-6 rounded-2xl border border-white/5 transition-all group flex flex-col items-start w-full">
+                                    <div className="p-2 sm:p-3 rounded-full bg-background group-hover:bg-primary/20 transition-colors mb-2 sm:mb-3">
                                         <Plus size={24} className="text-green-400" />
                                     </div>
                                     <p className="text-sm font-medium text-white">New Card</p>
                                 </button>
 
                                 <button onClick={() => handleDeleteCard(cards[selectedCardIndex].id, selectedCardIndex)}
-                                    className="bg-surface hover:bg-surface-hover p-6 rounded-2xl border border-white/5 transition-all group flex flex-col items-start">
-                                    <div className="p-3 rounded-full bg-background group-hover:bg-red-500/20 transition-colors mb-3">
+                                    className="bg-surface hover:bg-surface-hover p-4 sm:p-6 rounded-2xl border border-white/5 transition-all group flex flex-col items-start w-full">
+                                    <div className="p-2 sm:p-3 rounded-full bg-background group-hover:bg-red-500/20 transition-colors mb-2 sm:mb-3">
                                         <Trash2 size={24} className="text-red-400" />
                                     </div>
                                     <p className="text-sm font-medium text-white">Remove Card</p>

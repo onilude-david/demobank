@@ -21,20 +21,20 @@ const Settings = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Sidebar Navigation */}
-                <div className="lg:col-span-1 space-y-2">
+                {/* Navigation - Horizontal on Mobile, Vertical on Desktop */}
+                <div className="lg:col-span-1 flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === tab.id
+                            className={`flex-1 lg:flex-none flex items-center gap-3 px-4 py-3 rounded-xl transition-all whitespace-nowrap min-w-[120px] lg:min-w-0 ${activeTab === tab.id
                                     ? 'bg-primary/10 text-primary border border-primary/20'
                                     : 'text-muted hover:bg-surface hover:text-main'
                                 }`}
                         >
-                            <tab.icon size={20} />
-                            <span className="font-medium">{tab.label}</span>
-                            <ChevronRight size={16} className="ml-auto opacity-50" />
+                            <tab.icon size={20} className="shrink-0" />
+                            <span className="font-medium text-sm sm:text-base">{tab.label}</span>
+                            <ChevronRight size={16} className="ml-auto opacity-50 hidden lg:block" />
                         </button>
                     ))}
                 </div>
@@ -46,11 +46,11 @@ const Settings = () => {
                         <>
                             <section className="bg-surface rounded-2xl border border-white/5 p-6">
                                 <h3 className="text-xl font-bold text-main mb-6">Profile Information</h3>
-                                <div className="flex items-center gap-6 mb-8">
-                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-primary/20">
+                                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-primary/20 shrink-0">
                                         AS
                                     </div>
-                                    <div>
+                                    <div className="text-center sm:text-left">
                                         <button className="bg-white/5 hover:bg-white/10 text-main px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/10">
                                             Change Avatar
                                         </button>

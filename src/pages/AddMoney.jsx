@@ -117,13 +117,13 @@ const AddMoney = () => {
                         <form onSubmit={handleAddFunds} className="flex flex-col justify-center h-full">
                             <label className="text-sm font-medium text-gray-400 mb-4 text-center">Enter Amount</label>
                             <div className="relative mb-8">
-                                <span className="absolute left-1/2 -translate-x-[200%] top-1/2 -translate-y-1/2 text-4xl font-bold text-gray-500">$</span>
+                                <span className="absolute left-1/2 -translate-x-[180%] sm:-translate-x-[200%] top-1/2 -translate-y-1/2 text-2xl sm:text-4xl font-bold text-gray-500">$</span>
                                 <input
                                     type="number"
                                     placeholder="100.00"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
-                                    className="w-full bg-transparent text-center text-6xl font-bold text-white placeholder:text-gray-700 focus:outline-none"
+                                    className="w-full bg-transparent text-center text-4xl sm:text-6xl font-bold text-white placeholder:text-gray-700 focus:outline-none"
                                     required
                                 />
                             </div>

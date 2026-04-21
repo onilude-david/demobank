@@ -18,7 +18,7 @@ const BottomNav = () => (
                     key={item.path}
                     to={item.path}
                     className={({ isActive }) => cn(
-                        'flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl transition-all min-w-[56px]',
+                        'flex flex-col items-center justify-center gap-1 px-1 sm:px-3 py-2 rounded-xl transition-all min-w-[50px] sm:min-w-[56px]',
                         isActive ? 'text-primary' : 'text-gray-500'
                     )}
                 >

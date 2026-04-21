@@ -114,7 +114,7 @@ const Landing = () => {
                             The Modern Banking Experience
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.05] tracking-tight mb-6">
+                        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] tracking-tight mb-6">
                             Your money.
                             <br />
                             <span className="text-primary">Your control.</span>
