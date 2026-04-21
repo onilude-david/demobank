@@ -1,5 +1,5 @@
 -- ============================================================
--- VAULT DASHBOARD — Supabase Schema
+-- NOBLE TRUST BANK DASHBOARD — Supabase Schema
 -- Run this in: Supabase Dashboard → SQL Editor → New Query
 -- ============================================================
 

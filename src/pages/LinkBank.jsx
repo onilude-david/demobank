@@ -36,7 +36,7 @@ const LinkBank = () => {
                     <Building size={32} />
                 </div>
                 <h2 className="text-3xl font-bold text-white">Link your bank</h2>
-                <p className="text-gray-400 mt-2">Securely connect your bank account to Vault.</p>
+                <p className="text-gray-400 mt-2">Securely connect your bank account to Noble Trust Bank.</p>
             </div>
 
             <div className="bg-surface rounded-2xl border border-white/5 overflow-hidden">
@@ -152,7 +152,7 @@ const LinkBank = () => {
                         </div>
                         <h3 className="text-2xl font-bold text-white mb-2">Successfully Connected!</h3>
                         <p className="text-gray-400 mb-6">
-                            Your {selectedBank.name} account has been linked to Vault.
+                            Your {selectedBank.name} account has been linked to Noble Trust Bank.
                         </p>
                         <div className="inline-flex items-center gap-2 text-sm text-gray-500">
                             <div className="animate-spin w-4 h-4 border-2 border-gray-600 border-t-primary rounded-full"></div>
@@ -163,7 +163,7 @@ const LinkBank = () => {
 
                 <div className="p-4 bg-background/30 text-center text-xs text-gray-500 flex items-center justify-center gap-1">
                     <Lock size={12} />
-                    Your credentials are encrypted and never stored by Vault.
+                    Your credentials are encrypted and never stored by Noble Trust Bank.
                 </div>
             </div>
         </div>

@@ -67,7 +67,7 @@ const Overview = () => {
                     ) : (
                         <h3 className="text-5xl font-black text-white tracking-tight">{fmt(balance)}</h3>
                     )}
-                    <p className="text-gray-500 text-sm mt-2">Vault Checking Account</p>
+                    <p className="text-gray-500 text-sm mt-2">Noble Trust Checking Account</p>
                 </div>
             </div>
 

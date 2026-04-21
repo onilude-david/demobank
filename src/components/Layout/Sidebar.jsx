@@ -13,9 +13,9 @@ const Sidebar = () => {
         <aside className="hidden md:flex flex-col w-64 h-full bg-surface border-r border-surface-hover p-4">
             <div className="flex items-center gap-2 mb-8 px-2">
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-xl">V</span>
+                    <span className="text-white font-bold text-xl">N</span>
                 </div>
-                <h1 className="text-xl font-bold text-white tracking-tight">Vault</h1>
+                <h1 className="text-xl font-bold text-white tracking-tight">Noble Trust Bank</h1>
             </div>
 
             <nav className="flex-1 space-y-1">

@@ -30,7 +30,7 @@ const AddMoney = () => {
                     </div>
                     <h3 className="text-2xl font-bold text-white mb-2">Funds Added Successfully!</h3>
                     <p className="text-gray-400 mb-2">
-                        ${amount || '0.00'} has been added to your Vault wallet.
+                        ${amount || '0.00'} has been added to your Noble Trust Bank wallet.
                     </p>
                     <div className="inline-flex items-center gap-2 text-sm text-gray-500 mt-4">
                         <div className="animate-spin w-4 h-4 border-2 border-gray-600 border-t-primary rounded-full"></div>
@@ -45,7 +45,7 @@ const AddMoney = () => {
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div>
                 <h2 className="text-3xl font-bold text-white">Add Money</h2>
-                <p className="text-gray-400 mt-1">Top up your Vault wallet.</p>
+                <p className="text-gray-400 mt-1">Top up your Noble Trust Bank wallet.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

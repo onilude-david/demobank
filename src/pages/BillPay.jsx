@@ -67,7 +67,7 @@ const BillPay = () => {
                                     <CreditCard size={20} />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-white">Vault Card</p>
+                                    <p className="font-bold text-white">Noble Trust Bank Card</p>
                                     <p className="text-xs text-gray-400">Ending in 4289</p>
                                 </div>
                             </div>

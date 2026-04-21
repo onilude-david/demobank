@@ -30,7 +30,7 @@ const Cards = () => {
                         {/* Content */}
                         <div className="relative h-full p-8 flex flex-col justify-between text-white">
                             <div className="flex justify-between items-start">
-                                <div className="text-2xl font-bold tracking-wider">VAULT</div>
+                                <div className="text-2xl font-bold tracking-wider">NOBLE TRUST</div>
                                 <div className="text-lg font-medium opacity-80">Debit</div>
                             </div>
 

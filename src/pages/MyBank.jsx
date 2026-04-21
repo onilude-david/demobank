@@ -45,7 +45,7 @@ const CardVisual = ({ card, index, showFull = false }) => {
 
             <div className="relative z-10 flex justify-between items-start">
                 <div>
-                    <p className="text-white/80 text-sm mb-1">VAULT CARD</p>
+                    <p className="text-white/80 text-sm mb-1">NOBLE TRUST CARD</p>
                     <p className="text-white font-bold text-lg capitalize">{card.card_type}</p>
                 </div>
                 <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
@@ -438,7 +438,7 @@ const MyBank = () => {
                                     <Check size={40} />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-2">Successfully Connected!</h3>
-                                <p className="text-gray-400">Your {selectedBank.name} account has been linked to Vault.</p>
+                                <p className="text-gray-400">Your {selectedBank.name} account has been linked to Noble Trust Bank.</p>
                             </div>
                         )}
                     </div>

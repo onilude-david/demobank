@@ -9,6 +9,7 @@ import { ToastProvider } from './context/ToastContext';
 import AddMoney from './pages/AddMoney';
 import BillPay from './pages/BillPay';
 import Investments from './pages/Investments';
+import Landing from './pages/Landing';
 import Loans from './pages/Loans';
 import MyBank from './pages/MyBank';
 import NotFound from './pages/NotFound';
@@ -19,11 +20,11 @@ import SignUp from './pages/SignUp';
 import Transactions from './pages/Transactions';
 import Transfer from './pages/Transfer';
 
-// Redirects already-authenticated users away from login/register pages
+// Authenticated users get bounced to dashboard
 const PublicRoute = ({ children }) => {
     const { isAuthenticated, loading } = useAuth();
     if (loading) return null;
-    return isAuthenticated ? <Navigate to="/" replace /> : children;
+    return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
 };
 
 function App() {
@@ -35,29 +36,17 @@ function App() {
                         <ToastProvider>
                             <Router>
                                 <Routes>
-                                    {/* Public Routes */}
-                                    <Route
-                                        path="/signin"
-                                        element={
-                                            <PublicRoute>
-                                                <SignIn />
-                                            </PublicRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/signup"
-                                        element={
-                                            <PublicRoute>
-                                                <SignUp />
-                                            </PublicRoute>
-                                        }
-                                    />
+                                    {/* Landing */}
+                                    <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
 
-                                    {/* Protected Dashboard Routes */}
+                                    {/* Auth */}
+                                    <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
+                                    <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
+
+                                    {/* Protected Dashboard */}
                                     <Route element={<ProtectedRoute />}>
                                         <Route element={<Layout />}>
-                                            <Route path="/" element={<Overview />} />
-                                            <Route path="/cards" element={<MyBank />} />
+                                            <Route path="/dashboard" element={<Overview />} />
                                             <Route path="/my-bank" element={<MyBank />} />
                                             <Route path="/transactions" element={<Transactions />} />
                                             <Route path="/loans" element={<Loans />} />
@@ -69,7 +58,6 @@ function App() {
                                         </Route>
                                     </Route>
 
-                                    {/* 404 catch-all */}
                                     <Route path="*" element={<NotFound />} />
                                 </Routes>
                             </Router>

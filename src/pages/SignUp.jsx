@@ -47,7 +47,7 @@ const SignUp = () => {
 
             <div className="w-full max-w-md bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl animate-in fade-in zoom-in duration-500">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white mb-2 tracking-tighter">VAULT</h1>
+                    <h1 className="text-3xl font-bold text-white mb-2 tracking-tighter">NOBLE TRUST</h1>
                     <p className="text-gray-400">Create your account to get started.</p>
                 </div>
 

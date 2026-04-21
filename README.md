@@ -1,4 +1,4 @@
-# Vault Dashboard
+# Noble Trust Bank Dashboard
 
 A modern, responsive fintech dashboard built with React, Vite, and Tailwind CSS. Features a sleek dark/light mode theme with neon accents and comprehensive banking functionality.
 
@@ -36,7 +36,7 @@ A modern, responsive fintech dashboard built with React, Vite, and Tailwind CSS.
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd vault-dashboard
+cd noble-trust-bank
 
 # Install dependencies
 npm install
