@@ -27,7 +27,7 @@ const SignIn = () => {
 
         const success = await login(email, password);
         if (success) {
-            navigate('/');
+            navigate('/dashboard');
         }
         // On API failure: authError is set in context → triggers re-render → displayError shows it
     };

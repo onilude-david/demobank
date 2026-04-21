@@ -37,7 +37,7 @@ function App() {
                             <Router>
                                 <Routes>
                                     {/* Landing */}
-                                    <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+                                    <Route path="/" element={<Landing />} />
 
                                     {/* Auth */}
                                     <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />

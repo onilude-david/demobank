@@ -1,5 +1,6 @@
 import { ArrowRight, Shield, Zap, TrendingUp, CreditCard, Lock, Globe, ChevronRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const features = [
     {
@@ -60,6 +61,7 @@ const testimonials = [
 ];
 
 const Landing = () => {
+    const { isAuthenticated } = useAuth();
     return (
         <div className="min-h-screen bg-background text-white overflow-x-hidden">
             {/* ── Nav ── */}
@@ -79,12 +81,20 @@ const Landing = () => {
                         ))}
                     </div>
                     <div className="flex items-center gap-3">
-                        <Link to="/signin" className="text-gray-300 hover:text-white text-sm font-medium transition-colors hidden sm:block">
-                            Sign In
-                        </Link>
-                        <Link to="/signup" className="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/20 flex items-center gap-1.5">
-                            Get Started <ArrowRight size={14} />
-                        </Link>
+                        {isAuthenticated ? (
+                            <Link to="/dashboard" className="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/20 flex items-center gap-1.5">
+                                Go to Dashboard <ArrowRight size={14} />
+                            </Link>
+                        ) : (
+                            <>
+                                <Link to="/signin" className="text-gray-300 hover:text-white text-sm font-medium transition-colors hidden sm:block">
+                                    Sign In
+                                </Link>
+                                <Link to="/signup" className="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/20 flex items-center gap-1.5">
+                                    Get Started <ArrowRight size={14} />
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -115,15 +125,25 @@ const Landing = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/signup"
-                                className="bg-primary hover:bg-blue-600 text-white px-8 py-4 rounded-2xl text-base font-bold transition-all shadow-2xl shadow-primary/30 flex items-center justify-center gap-2 group">
-                                Open Free Account
-                                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <Link to="/signin"
-                                className="bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-2xl text-base font-bold transition-all border border-white/10 flex items-center justify-center gap-2">
-                                Sign In
-                            </Link>
+                            {isAuthenticated ? (
+                                <Link to="/dashboard"
+                                    className="bg-primary hover:bg-blue-600 text-white px-8 py-4 rounded-2xl text-base font-bold transition-all shadow-2xl shadow-primary/30 flex items-center justify-center gap-2 group">
+                                    Go to Dashboard
+                                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link to="/signup"
+                                        className="bg-primary hover:bg-blue-600 text-white px-8 py-4 rounded-2xl text-base font-bold transition-all shadow-2xl shadow-primary/30 flex items-center justify-center gap-2 group">
+                                        Open Free Account
+                                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                                    </Link>
+                                    <Link to="/signin"
+                                        className="bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-2xl text-base font-bold transition-all border border-white/10 flex items-center justify-center gap-2">
+                                        Sign In
+                                    </Link>
+                                </>
+                            )}
                         </div>
 
                         <p className="text-gray-600 text-sm mt-5">Free forever · No credit card required · Set up in 2 minutes</p>

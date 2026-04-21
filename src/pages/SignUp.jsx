@@ -33,7 +33,7 @@ const SignUp = () => {
 
         const success = await signup(email, password, name.trim());
         if (success) {
-            navigate('/');
+            navigate('/dashboard');
         }
         // On API failure: authError is set in context → triggers re-render → displayError shows it
     };
